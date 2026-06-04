@@ -1,12 +1,26 @@
+require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
+
+const authRoutes = require('./routes/auth');
+const cotisationsRoutes = require('./routes/cotisations');
+const adminRoutes = require('./routes/admin');
+
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 
 app.get('/', (req, res) => {
-  res.send('API CotiPay running');
+  res.send('CotiPay API fonctionne');
 });
 
-app.listen(3000, () => {
-  console.log('Server running on port 3000');
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/cotisations', cotisationsRoutes);
+app.use('/api/admin', adminRoutes);
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Serveur démarré sur le port ${PORT}`);
 });
