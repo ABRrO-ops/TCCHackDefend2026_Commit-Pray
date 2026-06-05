@@ -1,0 +1,10 @@
+# Dump SQL avec données réelles
+*.sql
+*.backup
+*.dump
+
+# on garde le schema de base
+!schema.sql
+
+# Fichiers temporaires pgAdmin
+*.tmp
