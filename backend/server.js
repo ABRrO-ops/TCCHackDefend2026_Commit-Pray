@@ -5,12 +5,12 @@ const cors = require('cors');
 const authRoutes = require('./routes/auth');
 const cotisationsRoutes = require('./routes/cotisations');
 const adminRoutes = require('./routes/admin');
-
+const membresRoutes = require('./routes/membres');
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-
+app.use('/api/membres', membresRoutes);
 app.get('/', (req, res) => {
   res.send('CotiPay API fonctionne');
 });
