@@ -21,7 +21,7 @@ router.post('/login', async (req, res) => {
     const user = result.rows[0];
 
     // Vérifier le mot de passe
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.mot_de_passe);
     if (!isMatch) {
       return res.status(401).json({ message: 'Email ou mot de passe incorrect' });
     }
