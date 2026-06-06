@@ -9,9 +9,10 @@ router.get('/mes-membres', verifyToken, async (req, res) => {
     const collecteurId = req.user.id;
 
     const result = await pool.query(`
-      SELECT m.id, m.nom, m.prenom, m.solde,
-        CASE WHEN c.id IS NOT NULL THEN true ELSE false END AS cotise_aujourd_hui
+      SELECT m.id, u.nom, u.prenom, m.montant_cotisation, m.solde,
+        c.statut, c.heure_validation
       FROM membres m
+      JOIN users u ON m.user_id = u.id
       LEFT JOIN cotisations c 
         ON c.membre_id = m.id 
         AND DATE(c.date_cotisation) = CURRENT_DATE
@@ -34,7 +35,7 @@ router.post('/valider/:membreId', verifyToken, async (req, res) => {
     // Créer la cotisation
     await pool.query(`
       INSERT INTO cotisations (membre_id, montant, date_cotisation, statut)
-      VALUES ($1, (SELECT montant_cotisation FROM membres WHERE id = $1), NOW(), 'validé')
+      VALUES ($1, (SELECT montant_cotisation FROM membres WHERE id = $1), NOW(), 'valide')
     `, [membreId]);
 
     // Mettre à jour le solde
