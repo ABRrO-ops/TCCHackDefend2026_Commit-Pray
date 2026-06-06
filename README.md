@@ -1,27 +1,125 @@
-# TCCHackDefend2026_CotiPay
-Projet hackathon TCCHackDefend 2026 - CotiPay
+# CotiPay 
+> Plateforme de digitalisation des tontines et micro-finances au Togo
 
-## Projet
-----------------------------------------------------------------
-SOLUTION :
-----------------------------------------------------------------
-CotiPay est une plateforme web SaaS multi-tenant qui digitalise
-les carnets de tontine des micro-finances togolaises.
-Chaque micro-finance dispose de son propre espace isolé.
-Les membres cotisent via mobile money. Tout est tracé,
-signé numériquement et visible en temps réel.
+CotiPay remplace le carnet papier des tontines par une application web complète.
+Les membres cotisent via mobile money, les collecteurs valident en 1 clic, et les
+micro-finances suivent tout en temps réel depuis un dashboard. Plus de carnet perdu,
+plus de litige, zéro frais supplémentaires pour le membre.
 
+---
 
-## Membres
-- BAWA Abdoul-Madjid 
-- ABE Romain chef
-- TCHAO Essodezame Ramia
-- DJONGON Amen Alice
+##  Problématique & Track
 
-## Stack
-- Frontend: React
-- Backend: Node.js + Express
-- Database: MySQL
+**Track : FinTech — Paiement mobile & inclusion financière**
 
-## Installation
-Instructions à venir
+Au Togo, des milliers de membres de micro-finances gèrent leurs cotisations
+journalières via des carnets papier confiés à des collecteurs physiques.
+CotiPay digitalise ce processus de bout en bout en remplaçant le carnet
+par une plateforme web accessible depuis n'importe quel navigateur.
+
+---
+
+##  Prérequis
+
+- Node.js v18+
+- npm v9+
+- PostgreSQL v17+
+- Git
+- Navigateur web moderne (Chrome, Firefox, Edge)
+
+---
+
+##  Installation
+
+### 1. Cloner le projet
+```bash
+git clone https://github.com/ABRrO-ops/TCCHackDefend2026_CotiPay.git
+cd TCCHackDefend2026_CotiPay
+```
+
+### 2. Configurer la base de données
+```bash
+psql -U postgres -h 127.0.0.1 -c "CREATE DATABASE cotipay;"
+psql -U postgres -h 127.0.0.1 -d cotipay -f database/schema.sql
+```
+
+### 3. Configurer le backend
+```bash
+cd backend
+npm install
+cp .env.example .env
+```
+Ouvrir le fichier `.env` et remplir les variables :
+
+```
+PORT=5000
+JWT_SECRET=cotipay_secret_2026
+DB_USER=postgres
+DB_HOST=127.0.0.1
+DB_NAME=cotipay
+DB_PASSWORD=votre_mot_de_passe_postgres
+DB_PORT=5432
+
+```
+
+### 4. Configurer le frontend
+```bash
+cd ../frontend
+npm install
+```
+
+---
+
+##  Lancement
+
+Ouvrir **2 terminaux** :
+
+**Terminal 1 — Backend :**
+```bash
+cd backend
+node server.js
+```
+→ Doit afficher : `Serveur démarré sur le port 5000` + `Connecté à PostgreSQL `
+
+**Terminal 2 — Frontend :**
+```bash
+cd frontend
+npm run dev
+```
+→ Ouvrir http://localhost:5173 dans le navigateur
+
+---
+
+##  Comptes de test
+
+| Rôle | Email | Mot de passe |
+|------|-------|--------------|
+| Admin | admin@cotipay.tg | admin123 |
+| Collecteur | agent@cotipay.tg | admin123 |
+| Membre | membre@cotipay.tg | admin123 |
+
+---
+
+##  Équipe — Commit & Pray
+
+| Nom | Rôle |
+|-----|------|
+| BAWA Abdoul-Madjid | Chef de projet + Frontend React |
+| ABE Romain | Backend Node.js + API REST |
+| DJONGON Amen Alice | Base de données + Authentification |
+|  TCHAO Essodezame Ramia| UI/UX + Livrables |
+
+---
+
+##  Stack Technique
+
+| Partie | Technologie |
+|--------|------------|
+| Frontend | React.js + Tailwind CSS |
+| Backend | Node.js + Express.js |
+| Base de données | PostgreSQL |
+| Authentification | JWT |
+
+---
+
+*TCC Hack & Defend 2026 — #TCCHackDefend2026*
