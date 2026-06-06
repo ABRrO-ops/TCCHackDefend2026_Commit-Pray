@@ -96,7 +96,9 @@ npm run dev
 |------|-------|--------------|
 | Admin | admin@cotipay.tg | admin123 |
 | Collecteur | agent@cotipay.tg | admin123 |
-| Membre | membre@cotipay.tg | admin123 |
+| Membre 1 | membre@cotipay.tg | admin123 |
+| Membre 2 | kofi@cotipay.tg | admin123 |
+| Membre 3 | adjoavi@cotipay.tg | admin123 |
 
 ---
 
@@ -105,8 +107,8 @@ npm run dev
 | Nom | Rôle |
 |-----|------|
 | BAWA Abdoul-Madjid | Chef de projet + Frontend React |
-| ABE Romain | Backend Node.js + API REST |
-| DJONGON Amen Alice | Base de données + Authentification |
+| ABE Romain | Base de données + Authentification |
+| DJONGON Amen Alice | Backend Node.js + API REST |
 |  TCHAO Essodezame Ramia| UI/UX + Livrables |
 
 ---
