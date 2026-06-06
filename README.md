@@ -14,7 +14,7 @@ signé numériquement et visible en temps réel.
 
 ## Membres
 - BAWA Abdoul-Madjid 
-- ABE Romain chef
+- ABE Romain 
 - TCHAO Essodezame Ramia
 - DJONGON Amen Alice
 
