@@ -117,6 +117,8 @@ UPDATE membres SET solde = 8000 WHERE id = 3;
 
 Les boutons "Valider" réapparaîtront chez le collecteur.
 
+---
+
 ##  Équipe — Commit & Pray
 
 | Nom | Rôle |
