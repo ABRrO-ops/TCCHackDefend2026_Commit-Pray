@@ -1,4 +1,4 @@
-# CotiPay
+# CotiPay 
 > Plateforme de digitalisation des tontines et micro-finances au Togo
 
 CotiPay remplace le carnet papier des tontines par une application web complète.
