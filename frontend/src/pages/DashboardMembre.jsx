@@ -91,7 +91,11 @@ export default function DashboardMembre() {
 
         {/* Carte solde */}
         <div className="bg-blue-600 rounded-2xl p-6 mb-6 text-white">
+<<<<<<< HEAD
           <p className="text-blue-200 text-sm mb-1"> MON SOLDE TOTAL</p>
+=======
+          <p className="text-blue-200 text-sm mb-1">MON SOLDE TOTAL</p>
+>>>>>>> 3b2759e0893645a0f17892d6267211f9b695972c
           <p className="text-4xl font-bold mb-3">{compte.membre.solde} FCFA</p>
 
           {/* Barre de progression */}
@@ -111,7 +115,11 @@ export default function DashboardMembre() {
 
           {/* Calendrier */}
           <div className="bg-white rounded-2xl p-4 shadow">
+<<<<<<< HEAD
             <p className="font-bold text-sm mb-3"> CALENDRIER</p>
+=======
+            <p className="font-bold text-sm mb-3">CALENDRIER</p>
+>>>>>>> 3b2759e0893645a0f17892d6267211f9b695972c
             <div className="grid grid-cols-7 gap-1 text-center text-xs text-gray-400 mb-1">
               {["L","M","M","J","V","S","D"].map((j,i) => <span key={i}>{j}</span>)}
             </div>
