@@ -96,8 +96,9 @@ npm run dev
 |------|-------|--------------|
 | Admin | admin@cotipay.tg | admin123 |
 | Collecteur | agent@cotipay.tg | admin123 |
-| Membre | membre@cotipay.tg | admin123 |
-
+| Membre 1 | membre@cotipay.tg | admin123 |
+| Membre 2 | kofi@cotipay.tg | admin123 |
+| Membre 3 | adjoavi@cotipay.tg | admin123 |
 ---
 
 ##  Équipe — Commit & Pray
