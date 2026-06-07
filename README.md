@@ -101,6 +101,23 @@ npm run dev
 | Membre 3 | adjoavi@cotipay.tg | admin123 |
 ---
 
+##  Réinitialiser les données de test
+
+Si les cotisations du jour ont déjà été validées, exécutez ces commandes
+pour réinitialiser avant de tester :
+
+```sql
+-- Supprimer les cotisations du jour
+DELETE FROM cotisations WHERE date_cotisation = CURRENT_DATE;
+
+-- Remettre les soldes initiaux
+UPDATE membres SET solde = 12000 WHERE id = 1;
+UPDATE membres SET solde = 25000 WHERE id = 2;
+UPDATE membres SET solde = 8000 WHERE id = 3;
+```
+
+Les boutons "Valider" réapparaîtront chez le collecteur.
+
 ##  Équipe — Commit & Pray
 
 | Nom | Rôle |
