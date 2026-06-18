@@ -115,7 +115,7 @@ export default function DashboardMembre() {
             <div className="grid grid-cols-7 gap-1 text-center text-xs text-gray-400 mb-1">
               {["L","M","M","J","V","S","D"].map((j,i) => <span key={i}>{j}</span>)}
             </div>
-            <div className="grid grid-cols-7 gap-1">
+            <div className="grid grid-cols-7 gap-1">s
               {genererCalendrier().map((j, i) => (
                 <div
                   key={i}
