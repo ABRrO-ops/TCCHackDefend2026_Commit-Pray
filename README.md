@@ -1,3 +1,4 @@
+
 # CotiPay 
 > Plateforme de digitalisation des tontines et micro-finances au Togo
 
@@ -144,3 +145,4 @@ Les boutons "Valider" réapparaîtront chez le collecteur.
 ---
 
 *TCC Hack & Defend 2026 — #TCCHackDefend2026*
+
