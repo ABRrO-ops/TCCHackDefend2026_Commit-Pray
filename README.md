@@ -33,8 +33,8 @@ par une plateforme web accessible depuis n'importe quel navigateur.
 
 ### 1. Cloner le projet
 ```bash
-git clone https://github.com/ABRrO-ops/TCCHackDefend2026_CotiPay.git
-cd TCCHackDefend2026_CotiPay
+git clone https://github.com/ABRrO-ops/TCCHackDefend2026_Commit-Pray.git
+cd TCCHackDefend2026_Commit-Pray
 ```
 
 ### 2. Configurer la base de données

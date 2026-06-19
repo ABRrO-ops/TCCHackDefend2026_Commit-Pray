@@ -77,11 +77,7 @@ export default function Login() {
         {/* Badge */}
         <div className="z-10">
           <span className="bg-primary-dark text-secondary text-xs px-4 py-2 rounded-full">
-<<<<<<< HEAD
-            🇹🇬 Fait pour le Togo
-=======
             🇹🇬 
->>>>>>> frontend
           </span>
         </div>
       </div>
@@ -133,11 +129,7 @@ export default function Login() {
             </Link>
           </p>
 
-<<<<<<< HEAD
-          <p className="text-center text-xs text-muted/60 mt-4">© 2026 CotiPay — Commit & Pray</p>
-=======
           <p className="text-center text-xs text-muted/60 mt-4">© 2026 CotiPay</p>
->>>>>>> frontend
         </div>
       </div>
 

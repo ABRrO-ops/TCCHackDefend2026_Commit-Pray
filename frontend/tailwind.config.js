@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-export default {
-  content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
-  theme: {
-    extend: {},
-=======
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -36,7 +30,6 @@ export default {
         soft: '#E4E0EC',
       },
     },
->>>>>>> frontend
   },
   plugins: [],
 }

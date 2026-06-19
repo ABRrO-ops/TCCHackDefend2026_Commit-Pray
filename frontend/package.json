@@ -10,16 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-<<<<<<< HEAD
-    "react": "^19.2.6",
-    "react-dom": "^19.2.6"
-=======
     "lucide-react": "^1.20.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-router-dom": "^7.18.0",
     "recharts": "^3.8.1"
->>>>>>> frontend
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
