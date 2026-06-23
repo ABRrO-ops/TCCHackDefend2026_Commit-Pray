@@ -20,7 +20,6 @@ router.post('/login', async (req, res) => {
     const user = result.rows[0];
 
     const isMatch = await bcrypt.compare(mot_de_passe, user.mot_de_passe);
-
     if (!isMatch) {
       return res.status(401).json({ message: 'Email ou mot de passe incorrect' });
     }
