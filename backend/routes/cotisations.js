@@ -9,9 +9,10 @@ router.get('/mes-membres', verifyToken, async (req, res) => {
     const collecteurId = req.user.id;
 
     const result = await pool.query(`
-      SELECT m.id, m.nom, m.prenom, m.solde,
-        CASE WHEN c.id IS NOT NULL THEN true ELSE false END AS cotise_aujourd_hui
+      SELECT m.id, u.nom, u.prenom, m.montant_cotisation, m.solde,
+        c.statut, c.heure_validation, c.initiee_par
       FROM membres m
+      JOIN users u ON m.user_id = u.id
       LEFT JOIN cotisations c 
         ON c.membre_id = m.id 
         AND DATE(c.date_cotisation) = CURRENT_DATE
@@ -31,17 +32,25 @@ router.post('/valider/:membreId', verifyToken, async (req, res) => {
   try {
     const { membreId } = req.params;
 
-    // Créer la cotisation
-    await pool.query(`
-      INSERT INTO cotisations (membre_id, montant, date_cotisation, statut)
-      VALUES ($1, (SELECT montant_cotisation FROM membres WHERE id = $1), NOW(), 'validé')
+    const cotisationEnAttente = await pool.query(`
+      SELECT id FROM cotisations
+      WHERE membre_id = $1 AND date_cotisation = CURRENT_DATE AND statut = 'attente'
     `, [membreId]);
 
-    // Mettre à jour le solde
+    if (cotisationEnAttente.rows.length === 0) {
+      await pool.query(`
+        INSERT INTO cotisations (membre_id, montant, date_cotisation, statut, initiee_par, heure_validation)
+        VALUES ($1, (SELECT montant_cotisation FROM membres WHERE id = $1), CURRENT_DATE, 'valide', 'collecteur', NOW())
+      `, [membreId]);
+    } else {
+      await pool.query(`
+        UPDATE cotisations SET statut = 'valide', heure_validation = NOW()
+        WHERE id = $1
+      `, [cotisationEnAttente.rows[0].id]);
+    }
+
     await pool.query(`
-      UPDATE membres 
-      SET solde = solde + montant_cotisation 
-      WHERE id = $1
+      UPDATE membres SET solde = solde + montant_cotisation WHERE id = $1
     `, [membreId]);
 
     res.json({ message: 'Cotisation validée avec succès ✅' });

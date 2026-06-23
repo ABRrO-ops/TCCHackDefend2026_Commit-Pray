@@ -6,10 +6,9 @@ const pool = require('../db');
 
 // POST /api/auth/login
 router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+  const { email, mot_de_passe } = req.body;
 
   try {
-    // Chercher l'utilisateur
     const result = await pool.query(
       'SELECT * FROM users WHERE email = $1', [email]
     );
@@ -20,13 +19,12 @@ router.post('/login', async (req, res) => {
 
     const user = result.rows[0];
 
-    // Vérifier le mot de passe
-    const isMatch = await bcrypt.compare(password, user.mot_de_passe);
+    const isMatch = await bcrypt.compare(mot_de_passe, user.mot_de_passe);
+
     if (!isMatch) {
       return res.status(401).json({ message: 'Email ou mot de passe incorrect' });
     }
 
-    // Générer le token JWT
     const token = jwt.sign(
       { id: user.id, role: user.role },
       process.env.JWT_SECRET,

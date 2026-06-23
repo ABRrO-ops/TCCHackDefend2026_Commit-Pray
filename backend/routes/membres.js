@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../db'); // ton fichier de connexion PostgreSQL
-const { verifyToken } = require('../middleware/auth'); // PARTIE 5
+const verifyToken = require('../middleware/authMiddleware'); // PARTIE 5
 
 // GET /api/membres/mon-compte
 router.get('/mon-compte', verifyToken, async (req, res) => {
