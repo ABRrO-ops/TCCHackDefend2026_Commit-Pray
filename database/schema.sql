@@ -39,3 +39,28 @@ CREATE TABLE cotisations (
     collecteur_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+ALTER TABLE cotisations ADD COLUMN initiee_par VARCHAR(20) DEFAULT 'collecteur' 
+CHECK (initiee_par IN ('collecteur', 'membre')); 
+ALTER TABLE cotisations ADD COLUMN mode_paiement VARCHAR(30) CHECK 
+(mode_paiement IN ('mix_by_yas', 'moov_money')); 
+CREATE TABLE engagements_mensuels ( 
+id SERIAL PRIMARY KEY, 
+membre_id INTEGER REFERENCES membres(id) ON DELETE CASCADE, 
+mois INTEGER NOT NULL, 
+annee INTEGER NOT NULL, 
+montant_journalier NUMERIC(10,2) NOT NULL, 
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+UNIQUE(membre_id, mois, annee) 
+); 
+CREATE TABLE demandes_retrait ( 
+id SERIAL PRIMARY KEY, 
+membre_id INTEGER REFERENCES membres(id) ON DELETE CASCADE, 
+montant NUMERIC(10,2) NOT NULL, 
+mode_paiement VARCHAR(30) CHECK (mode_paiement IN ('mix_by_yas', 
+'moov_money')), 
+statut VARCHAR(20) DEFAULT 'en_attente' CHECK (statut IN ('en_attente', 'validee', 
+'rejetee')), 
+motif_rejet TEXT, 
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+traite_le TIMESTAMP 
+);
