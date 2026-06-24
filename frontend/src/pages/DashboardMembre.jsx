@@ -17,65 +17,65 @@ export default function DashboardMembre() {
   const token = localStorage.getItem("token")
 
   const chargerCompte = () => {
-  fetch("http://localhost:5000/api/membres/mon-compte", {
-    headers: { Authorization: "Bearer " + token }
-  })
-  .then(res => res.json())
-  .then(data => { setCompte(data); setLoading(false) })
-  .catch(() => navigate("/"))
-}
+    fetch("http://localhost:5000/api/membres/mon-compte", {
+      headers: { Authorization: "Bearer " + token }
+    })
+    .then(res => res.json())
+    .then(data => { setCompte(data); setLoading(false) })
+    .catch(() => navigate("/"))
+  }
 
-useEffect(() => {
-  if (!token) { navigate("/"); return }
-  chargerCompte()
-}, [])
+  useEffect(() => {
+    if (!token) { navigate("/"); return }
+    chargerCompte()
+  }, [])
 
   const deconnexion = () => { localStorage.clear(); navigate("/") }
 
   const demarrerCotisation = () => {
-  setEtapeCotisation("choix-paiement")
+    setEtapeCotisation("choix-paiement")
   }
 
-const handleChoixPaiement = (mode) => {
-  setModeChoisi(mode)
-  setEtapeCotisation("ussd")
-}
-
-const handleConfirmeUSSD = async () => {
-  setEtapeCotisation(null)
-
-  const res = await fetch("http://localhost:5000/api/membres/cotiser", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
-    body: JSON.stringify({ mode_paiement: modeChoisi })
-  })
-  const data = await res.json()
-
-  if (data.besoinMontant) {
-    setBesoinMontant(true)
-    setEtapeCotisation("choix-montant")
-    return
+  const handleChoixPaiement = (mode) => {
+    setModeChoisi(mode)
+    setEtapeCotisation("ussd")
   }
 
-  setMessageSucces(data.message || data.error)
-  chargerCompte()
-  setTimeout(() => setMessageSucces(""), 4000)
-}
+  const handleConfirmeUSSD = async () => {
+    setEtapeCotisation(null)
 
-const handleChoixMontant = async (montantChoisi) => {
-  setEtapeCotisation(null)
+    const res = await fetch("http://localhost:5000/api/membres/cotiser", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+      body: JSON.stringify({ mode_paiement: modeChoisi })
+    })
+    const data = await res.json()
 
-  const res = await fetch("http://localhost:5000/api/membres/cotiser", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
-    body: JSON.stringify({ mode_paiement: modeChoisi, montant_choisi: montantChoisi })
-  })
-  const data = await res.json()
+    if (data.besoinMontant) {
+      setBesoinMontant(true)
+      setEtapeCotisation("choix-montant")
+      return
+    }
 
-  setMessageSucces(data.message || data.error)
-  chargerCompte()
-  setTimeout(() => setMessageSucces(""), 4000)
-}
+    setMessageSucces(data.message || data.error)
+    chargerCompte()
+    setTimeout(() => setMessageSucces(""), 4000)
+  }
+
+  const handleChoixMontant = async (montantChoisi) => {
+    setEtapeCotisation(null)
+
+    const res = await fetch("http://localhost:5000/api/membres/cotiser", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+      body: JSON.stringify({ mode_paiement: modeChoisi, montant_choisi: montantChoisi })
+    })
+    const data = await res.json()
+
+    setMessageSucces(data.message || data.error)
+    chargerCompte()
+    setTimeout(() => setMessageSucces(""), 4000)
+  }
 
   const joursDuMois = () => {
     const now = new Date()
@@ -216,6 +216,11 @@ const handleChoixMontant = async (montantChoisi) => {
           <h1 className="text-2xl font-bold text-main">
             Bonjour {compte.membre.prenom} 👋
           </h1>
+          {messageSucces && (
+            <div className="bg-success-light text-success text-sm px-4 py-3 rounded-xl mt-3 font-medium">
+              {messageSucces}
+            </div>
+          )}
           <p className="text-muted text-sm">
             {new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
           </p>
@@ -244,6 +249,12 @@ const handleChoixMontant = async (montantChoisi) => {
               <div className="bg-success h-1.5 rounded-full" style={{ width: `${(serie / totalJours) * 100}%` }} />
             </div>
             <p className="text-primary-light/70 text-xs">Cotisation : {compte.membre.montant_cotisation} FCFA/jour</p>
+            <button
+              onClick={demarrerCotisation}
+              className="mt-4 w-full bg-white text-primary text-sm font-bold py-2.5 rounded-xl hover:bg-secondary transition-colors"
+            >
+              Cotiser aujourd'hui
+            </button>
           </div>
 
           {/* Carte statut du jour */}
@@ -347,6 +358,30 @@ const handleChoixMontant = async (montantChoisi) => {
           </div>
 
         </div>
+
+        {etapeCotisation === "choix-paiement" && (
+          <ChoixPaiement
+            montant={compte.membre.solde}
+            onConfirme={handleChoixPaiement}
+            onAnnuler={() => setEtapeCotisation(null)}
+          />
+        )}
+
+        {etapeCotisation === "ussd" && (
+          <SimulationUSSD
+            mode={modeChoisi}
+            montant="2000"
+            onConfirme={handleConfirmeUSSD}
+            onAnnuler={() => setEtapeCotisation(null)}
+          />
+        )}
+
+        {etapeCotisation === "choix-montant" && (
+          <ChoixMontant
+            onConfirme={handleChoixMontant}
+            onAnnuler={() => setEtapeCotisation(null)}
+          />
+        )}
 
       </main>
     </div>
