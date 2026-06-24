@@ -1,25 +1,81 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { LayoutDashboard, History, Banknote, User, LogOut, ChevronLeft, ChevronRight, Flame } from "lucide-react"
+import ChoixPaiement from "../components/ChoixPaiement"
+import SimulationUSSD from "../components/SimulationUSSD"
+import ChoixMontant from "../components/ChoixMontant"
 
 export default function DashboardMembre() {
   const [compte, setCompte] = useState(null)
+  const [etapeCotisation, setEtapeCotisation] = useState(null) // null | "choix-paiement" | "ussd" | "choix-montant"
+  const [modeChoisi, setModeChoisi] = useState(null)
+  const [besoinMontant, setBesoinMontant] = useState(false)
+  const [messageSucces, setMessageSucces] = useState("")
   const [loading, setLoading] = useState(true)
   const [sidebarOuverte, setSidebarOuverte] = useState(true)
   const navigate = useNavigate()
   const token = localStorage.getItem("token")
 
-  useEffect(() => {
-    if (!token) { navigate("/"); return }
-    fetch("http://localhost:5000/api/membres/mon-compte", {
-      headers: { Authorization: "Bearer " + token }
-    })
-    .then(res => res.json())
-    .then(data => { setCompte(data); setLoading(false) })
-    .catch(() => navigate("/"))
-  }, [])
+  const chargerCompte = () => {
+  fetch("http://localhost:5000/api/membres/mon-compte", {
+    headers: { Authorization: "Bearer " + token }
+  })
+  .then(res => res.json())
+  .then(data => { setCompte(data); setLoading(false) })
+  .catch(() => navigate("/"))
+}
+
+useEffect(() => {
+  if (!token) { navigate("/"); return }
+  chargerCompte()
+}, [])
 
   const deconnexion = () => { localStorage.clear(); navigate("/") }
+
+  const demarrerCotisation = () => {
+  setEtapeCotisation("choix-paiement")
+  }
+
+const handleChoixPaiement = (mode) => {
+  setModeChoisi(mode)
+  setEtapeCotisation("ussd")
+}
+
+const handleConfirmeUSSD = async () => {
+  setEtapeCotisation(null)
+
+  const res = await fetch("http://localhost:5000/api/membres/cotiser", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+    body: JSON.stringify({ mode_paiement: modeChoisi })
+  })
+  const data = await res.json()
+
+  if (data.besoinMontant) {
+    setBesoinMontant(true)
+    setEtapeCotisation("choix-montant")
+    return
+  }
+
+  setMessageSucces(data.message || data.error)
+  chargerCompte()
+  setTimeout(() => setMessageSucces(""), 4000)
+}
+
+const handleChoixMontant = async (montantChoisi) => {
+  setEtapeCotisation(null)
+
+  const res = await fetch("http://localhost:5000/api/membres/cotiser", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+    body: JSON.stringify({ mode_paiement: modeChoisi, montant_choisi: montantChoisi })
+  })
+  const data = await res.json()
+
+  setMessageSucces(data.message || data.error)
+  chargerCompte()
+  setTimeout(() => setMessageSucces(""), 4000)
+}
 
   const joursDuMois = () => {
     const now = new Date()
