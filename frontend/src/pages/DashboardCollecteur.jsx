@@ -197,6 +197,11 @@ export default function DashboardCollecteur() {
                       <div>
                         <p className="text-sm font-semibold text-main">{m.nom} {m.prenom}</p>
                         <p className="text-xs text-muted">{m.montant_cotisation} FCFA/jour</p>
+                        {m.initiee_par === "membre" && (
+                          <span className="inline-flex items-center gap-1 mt-1 text-xs font-semibold text-primary bg-secondary px-2 py-0.5 rounded-full">
+                            ● Initié par le membre
+                          </span>
+                        )}
                       </div>
                     </div>
                     <button
