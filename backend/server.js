@@ -32,7 +32,7 @@ app.get('/', (req, res) => {
 });
 
 // ✅ Serveur
-const PORT = 5000;
+const PORT = 3000;
 
 app.listen(PORT, () => {
   console.log(`Serveur démarré sur le port ${PORT}`);
