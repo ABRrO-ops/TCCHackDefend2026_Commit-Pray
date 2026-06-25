@@ -7,7 +7,6 @@ const modes = [
     nom: "Mix by Yas",
     description: "Paiement mobile Togocel",
     logo: "/mix-by-yas.png",
-    couleur: "#FF6600",
     bg: "#FFF4ED",
   },
   {
@@ -15,33 +14,25 @@ const modes = [
     nom: "Moov Money",
     description: "Paiement mobile Moov Africa",
     logo: "/moov-money.png",
-    couleur: "#0066CC",
-    bg: "#EDF4FF",
+    bg: "#FFF4ED",
   },
 ]
 
 export default function ChoixPaiement({ onConfirme, onAnnuler, montant }) {
   const [modeSelectionne, setModeSelectionne] = useState(null)
-  const [imgErrors, setImgErrors] = useState({})
-
-  const handleImgError = (id, couleur, nom) => {
-    setImgErrors(prev => ({ ...prev, [id]: true }))
-  }
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
       <div className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-2xl">
 
         {/* Header */}
-        <div className="mb-5">
-          <h3 className="font-bold text-main text-lg">Mode de paiement</h3>
-          <p className="text-muted text-sm mt-0.5">
-            Montant à payer :{" "}
-            <span className="font-bold text-primary">
-              {parseFloat(montant).toLocaleString("fr-FR")} FCFA
-            </span>
-          </p>
-        </div>
+        <h3 className="font-bold text-main text-lg mb-1">Mode de paiement</h3>
+        <p className="text-muted text-sm mb-5">
+          Montant à payer :{" "}
+          <span className="font-bold text-primary">
+            {parseFloat(montant).toLocaleString("fr-FR")} FCFA
+          </span>
+        </p>
 
         {/* Options */}
         <div className="space-y-3 mb-6">
@@ -53,31 +44,17 @@ export default function ChoixPaiement({ onConfirme, onAnnuler, montant }) {
                 onClick={() => setModeSelectionne(mode.id)}
                 className={`w-full flex items-center gap-4 p-4 rounded-2xl border-2 transition-all duration-200 text-left ${
                   selectionne
-                    ? "border-primary shadow-sm scale-[1.01]"
-                    : "border-soft hover:border-primary/30"
+                    ? "border-primary bg-secondary"
+                    : "border-soft hover:border-primary/40 bg-white"
                 }`}
-                style={{ backgroundColor: selectionne ? mode.bg : "white" }}
               >
                 {/* Logo */}
-                <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden p-1.5"
-                  style={{ backgroundColor: mode.bg }}
-                >
-                  {imgErrors[mode.id] ? (
-                    <div
-                      className="w-full h-full rounded-lg flex items-center justify-center text-white font-bold text-sm"
-                      style={{ backgroundColor: mode.couleur }}
-                    >
-                      {mode.nom.charAt(0)}
-                    </div>
-                  ) : (
-                    <img
-                      src={mode.logo}
-                      alt={mode.nom}
-                      className="w-full h-full object-contain"
-                      onError={() => handleImgError(mode.id)}
-                    />
-                  )}
+                <div className="w-12 h-12 rounded-xl bg-white border border-soft flex items-center justify-center flex-shrink-0 overflow-hidden p-1">
+                  <img
+                    src={mode.logo}
+                    alt={mode.nom}
+                    className="w-full h-full object-contain"
+                  />
                 </div>
 
                 {/* Texte */}
