@@ -126,7 +126,7 @@ export default function DashboardMembre() {
   const navItems = [
     { icon: LayoutDashboard, label: "Tableau de bord", actif: true },
     { icon: History, label: "Historique" },
-    { icon: Banknote, label: "Retraits" },
+    { icon: Banknote, label: "Retraits", onClick: () => navigate("/membre/retrait") },
     { icon: User, label: "Profil" },
   ]
 
@@ -173,10 +173,11 @@ export default function DashboardMembre() {
             {navItems.map((item, i) => (
               <div
                 key={i}
+                onClick={item.onClick}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors ${
                   item.actif ? "bg-white/15" : "hover:bg-white/5"
                 }`}
-              >
+>
                 <item.icon size={18} className={item.actif ? "text-white" : "text-white/60"} />
                 {sidebarOuverte && (
                   <span className={`text-sm whitespace-nowrap ${item.actif ? "font-semibold text-white" : "text-white/60"}`}>
