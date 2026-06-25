@@ -1,6 +1,5 @@
 require('dotenv').config(); // ✅ DOIT ÊTRE EN HAUT
 
-console.log("TEST ENV:", process.env.TEST);
 
 const express = require('express');
 const cors = require('cors');
