@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { LayoutDashboard, Users, History, Settings, LogOut, ChevronLeft, ChevronRight, Wallet, TrendingUp, CheckCircle2 } from "lucide-react"
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts"
 import AjouterUtilisateur from "../components/AjouterUtilisateur"
+import SelecteurPeriode from "../components/SelecteurPeriode"
 
 export default function DashboardAdmin() {
   const [stats, setStats] = useState({ totalMembres: 0, cotisationsAujourdhui: 0, totalCollecte: 0 })
@@ -54,12 +55,33 @@ export default function DashboardAdmin() {
 
   const deconnexion = () => { localStorage.clear(); navigate("/") }
 
- const navItems = [
-  { icon: LayoutDashboard, label: "Tableau de bord", actif: true },
-  { icon: Users, label: "Membres", actif: false, onClick: () => setModaleOuverte("membre") },
-  { icon: History, label: "Historique" },
-  { icon: Settings, label: "Paramètres" },
-]
+  const exporterCSV = async (debut, fin) => {
+    const res = await fetch(`http://localhost:5000/api/admin/export/cotisations?debut=${debut}&fin=${fin}`, {
+      headers: { Authorization: "Bearer " + token }
+    })
+
+    if (!res.ok) {
+      alert("Erreur lors de l'export")
+      return
+    }
+
+    const blob = await res.blob()
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = `export_cotisations_${debut}_${fin}.csv`
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    window.URL.revokeObjectURL(url)
+  }
+
+  const navItems = [
+    { icon: LayoutDashboard, label: "Tableau de bord", actif: true },
+    { icon: Users, label: "Membres", actif: false, onClick: () => setModaleOuverte("membre") },
+    { icon: History, label: "Historique" },
+    { icon: Settings, label: "Paramètres" },
+  ]
 
   if (loading) return (
     <div className="min-h-screen bg-secondary flex items-center justify-center">
@@ -192,6 +214,7 @@ export default function DashboardAdmin() {
         </div>
 
         {/* Graphique tendance */}
+        <SelecteurPeriode onExporter={exporterCSV} />
         <div className="bg-white rounded-2xl p-6 border border-soft mb-6">
           <div className="flex justify-between items-center mb-4">
             <div>
