@@ -68,6 +68,23 @@ CREATE TABLE demandes_retrait (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     traite_le TIMESTAMP
 );
+ALTER TABLE microfinances ADD COLUMN statut VARCHAR(20) DEFAULT 'en_attente' CHECK (statut IN ('en_attente', 'active', 'rejetee'));
+ALTER TABLE microfinances ADD COLUMN plan VARCHAR(20) CHECK (plan IN ('starter', 'standard', 'premium'));
+ALTER TABLE microfinances ADD COLUMN domaine_email VARCHAR(50) UNIQUE;
+
+CREATE TABLE demandes_inscription (
+    id SERIAL PRIMARY KEY,
+    nom_microfinance VARCHAR(100) NOT NULL,
+    ville VARCHAR(50) NOT NULL,
+    telephone VARCHAR(20) NOT NULL,
+    numero_agrement VARCHAR(50),
+    nom_directeur VARCHAR(50) NOT NULL,
+    prenom_directeur VARCHAR(50) NOT NULL,
+    email_directeur VARCHAR(100) NOT NULL,
+    plan_choisi VARCHAR(20) CHECK (plan_choisi IN ('starter', 'standard', 'premium')),
+    statut VARCHAR(20) DEFAULT 'en_attente' CHECK (statut IN ('en_attente', 'validee', 'rejetee')),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 
 
