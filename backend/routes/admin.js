@@ -4,6 +4,8 @@ const router = express.Router();
 const pool = require('../db');
 const verifyToken = require('../middleware/authMiddleware');
 const createCsvWriter = require('csv-writer').createObjectCsvStringifier;
+const bcrypt = require('bcryptjs');
+const {genererEmailInterne } = require('../utils/genererEmail');
 
 // 2. MIDDLEWARES
 const isAdmin = (req, res, next) => {
@@ -97,5 +99,88 @@ router.get('/cotisations/today', verifyToken, isAdmin, async (req, res) => {
   }
 });
 
+// POST /api/admin/collecteurs
+router.post('/collecteurs', verifyToken, isAdmin, async (req, res) => {
+  try {
+    const { nom, prenom } = req.body;
+    const adminId = req.user.id;
+
+    const adminInfo = await pool.query('SELECT microfinance_id FROM users WHERE id = $1', [adminId]);
+    const microfinanceId = adminInfo.rows[0].microfinance_id;
+
+    const mf = await pool.query('SELECT domaine_email FROM microfinances WHERE id = $1', [microfinanceId]);
+    const domaineEmail = mf.rows[0].domaine_email;
+
+    const email = await genererEmailInterne(prenom, nom, domaineEmail);
+    const motDePasseTemp = Math.random().toString(36).slice(-8);
+    const hash = await bcrypt.hash(motDePasseTemp, 10);
+
+    await pool.query(`
+      INSERT INTO users (nom, prenom, email, mot_de_passe, role, microfinance_id)
+      VALUES ($1, $2, $3, $4, 'collecteur', $5)
+    `, [nom, prenom, email, hash, microfinanceId]);
+
+    res.json({ message: 'Collecteur créé', email, motDePasseTemp });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+});
+
+// POST /api/admin/membres
+router.post('/membres', verifyToken, isAdmin, async (req, res) => {
+  try {
+    const { nom, prenom, collecteur_id } = req.body;
+    const adminId = req.user.id;
+
+    const adminInfo = await pool.query('SELECT microfinance_id FROM users WHERE id = $1', [adminId]);
+    const microfinanceId = adminInfo.rows[0].microfinance_id;
+
+    const mf = await pool.query('SELECT domaine_email FROM microfinances WHERE id = $1', [microfinanceId]);
+    const domaineEmail = mf.rows[0].domaine_email;
+
+    const email = await genererEmailInterne(prenom, nom, domaineEmail);
+    const motDePasseTemp = Math.random().toString(36).slice(-8);
+    const hash = await bcrypt.hash(motDePasseTemp, 10);
+
+    const newUser = await pool.query(`
+      INSERT INTO users (nom, prenom, email, mot_de_passe, role, microfinance_id)
+      VALUES ($1, $2, $3, $4, 'membre', $5)
+      RETURNING id
+    `, [nom, prenom, email, hash, microfinanceId]);
+
+    await pool.query(`
+      INSERT INTO membres (user_id, solde, collecteur_id)
+      VALUES ($1, 0, $2)
+    `, [newUser.rows[0].id, collecteur_id]);
+
+    res.json({ message: 'Membre créé', email, motDePasseTemp });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+});
+
+// GET /api/admin/collecteurs
+router.get('/collecteurs', verifyToken, isAdmin, async (req, res) => {
+  try {
+    const adminId = req.user.id;
+    const adminInfo = await pool.query('SELECT microfinance_id FROM users WHERE id = $1', [adminId]);
+    const microfinanceId = adminInfo.rows[0].microfinance_id;
+
+    const result = await pool.query(`
+      SELECT id, nom, prenom FROM users
+      WHERE role = 'collecteur' AND microfinance_id = $1
+      ORDER BY nom
+    `, [microfinanceId]);
+
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+});
 // 4. EXPORT (Tout en bas)
 module.exports = router;

@@ -2,12 +2,15 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { LayoutDashboard, Users, History, Settings, LogOut, ChevronLeft, ChevronRight, Wallet, TrendingUp, CheckCircle2 } from "lucide-react"
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts"
+import AjouterUtilisateur from "../components/AjouterUtilisateur"
 
 export default function DashboardAdmin() {
   const [stats, setStats] = useState({ totalMembres: 0, cotisationsAujourdhui: 0, totalCollecte: 0 })
   const [cotisations, setCotisations] = useState([])
   const [loading, setLoading] = useState(true)
   const [sidebarOuverte, setSidebarOuverte] = useState(true)
+  const [modaleOuverte, setModaleOuverte] = useState(null) // null | "collecteur" | "membre"
+  const [collecteurs, setCollecteurs] = useState([])
   const navigate = useNavigate()
   const token = localStorage.getItem("token")
 
@@ -41,16 +44,22 @@ export default function DashboardAdmin() {
     })
     .then(res => res.json())
     .then(data => { setCotisations(data); setLoading(false) })
+
+    fetch("http://localhost:5000/api/admin/collecteurs", {
+      headers: { Authorization: "Bearer " + token }
+    })
+    .then(res => res.json())
+    .then(data => setCollecteurs(data))
   }, [])
 
   const deconnexion = () => { localStorage.clear(); navigate("/") }
 
-  const navItems = [
-    { icon: LayoutDashboard, label: "Tableau de bord", actif: true },
-    { icon: Users, label: "Membres" },
-    { icon: History, label: "Historique" },
-    { icon: Settings, label: "Paramètres" },
-  ]
+ const navItems = [
+  { icon: LayoutDashboard, label: "Tableau de bord", actif: true },
+  { icon: Users, label: "Membres", actif: false, onClick: () => setModaleOuverte("membre") },
+  { icon: History, label: "Historique" },
+  { icon: Settings, label: "Paramètres" },
+]
 
   if (loading) return (
     <div className="min-h-screen bg-secondary flex items-center justify-center">
@@ -90,16 +99,17 @@ export default function DashboardAdmin() {
             {navItems.map((item, i) => (
               <div
                 key={i}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors ${
-                  item.actif ? "bg-white/15" : "hover:bg-white/5"
-                }`}
-              >
-                <item.icon size={18} className={item.actif ? "text-white" : "text-white/60"} />
-                {sidebarOuverte && (
-                  <span className={`text-sm whitespace-nowrap ${item.actif ? "font-semibold text-white" : "text-white/60"}`}>
-                    {item.label}
-                  </span>
-                )}
+                  onClick={item.onClick}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors ${
+                    item.actif ? "bg-white/15" : "hover:bg-white/5"
+                  }`}
+                >
+                  <item.icon size={18} className={item.actif ? "text-white" : "text-white/60"} />
+                  {sidebarOuverte && (
+                    <span className={`text-sm whitespace-nowrap ${item.actif ? "font-semibold text-white" : "text-white/60"}`}>
+                      {item.label}
+                    </span>
+                  )}
               </div>
             ))}
           </nav>
@@ -128,6 +138,20 @@ export default function DashboardAdmin() {
 
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-main">Tableau de bord</h1>
+          <div className="flex gap-3 mb-6">
+            <button
+              onClick={() => setModaleOuverte("collecteur")}
+              className="bg-primary text-white text-sm font-semibold px-4 py-2 rounded-lg"
+            >
+              + Ajouter un collecteur
+            </button>
+            <button
+              onClick={() => setModaleOuverte("membre")}
+              className="bg-white border border-soft text-main text-sm font-semibold px-4 py-2 rounded-lg"
+            >
+              + Ajouter un membre
+            </button>
+          </div>
           <p className="text-muted text-sm">CECAV Fraternité — Vue d'ensemble</p>
         </div>
 
@@ -254,7 +278,14 @@ export default function DashboardAdmin() {
             </table>
           )}
         </div>
-
+        {modaleOuverte && (
+          <AjouterUtilisateur
+            type={modaleOuverte}
+            listeCollecteurs={collecteurs}
+            onFermer={() => setModaleOuverte(null)}
+            onSucces={() => {}}
+          />
+        )}
       </main>
     </div>
   )
