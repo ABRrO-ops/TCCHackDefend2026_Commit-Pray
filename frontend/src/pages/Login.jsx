@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useNavigate, Link } from "react-router-dom"
+import CarrouselRoles from "../components/CarrouselRoles"
 
 export default function Login() {
   const [email, setEmail] = useState("")
@@ -58,21 +59,8 @@ export default function Login() {
             Une seule plateforme pour les membres, les collecteurs et les micro-finances.
           </p>
 
-          {/* 3 mini-blocs rôles */}
-          <div className="space-y-3">
-            <div className="bg-white/10 rounded-xl px-4 py-3 flex items-center gap-3">
-              <span className="text-lg">👤</span>
-              <p className="text-white text-sm">Les <strong>membres</strong> suivent leur épargne en temps réel</p>
-            </div>
-            <div className="bg-white/10 rounded-xl px-4 py-3 flex items-center gap-3">
-              <span className="text-lg">✅</span>
-              <p className="text-white text-sm">Les <strong>collecteurs</strong> valident les cotisations en 1 clic</p>
-            </div>
-            <div className="bg-white/10 rounded-xl px-4 py-3 flex items-center gap-3">
-              <span className="text-lg">📊</span>
-              <p className="text-white text-sm">Les <strong>admins</strong> pilotent leur micro-finance</p>
-            </div>
-          </div>
+        {/* 3 mini-blocs rôles */}
+        <CarrouselRoles />
         </div>
 
         {/* Badge */}
