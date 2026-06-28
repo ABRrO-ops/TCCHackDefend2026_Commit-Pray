@@ -12,13 +12,7 @@ CREATE TABLE users (
     prenom VARCHAR(50) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     mot_de_passe VARCHAR(255) NOT NULL,
-    role VARCHAR(20) CHECK (
-        role IN (
-            'admin',
-            'collecteur',
-            'membre'
-        )
-    ) NOT NULL,
+    role VARCHAR(20) CHECK (role IN ('admin', 'collecteur', 'membre', 'super_admin')) NOT NULL,
     microfinance_id INTEGER REFERENCES microfinances (id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
