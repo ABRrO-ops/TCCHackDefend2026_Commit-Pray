@@ -18,7 +18,8 @@ export default function Login() {
       if (data.token) {
         localStorage.setItem("token", data.token)
         localStorage.setItem("role", data.role)
-        if (data.role === "admin") navigate("/admin")
+        if (data.role === "super_admin") navigate("/backoffice")
+        else if (data.role === "admin") navigate("/admin")
         else if (data.role === "collecteur") navigate("/collecteur")
         else navigate("/membre")
       } else {

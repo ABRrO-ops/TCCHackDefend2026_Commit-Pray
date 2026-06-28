@@ -5,6 +5,7 @@ import DashboardMembre from "./pages/DashboardMembre"
 import DashboardCollecteur from "./pages/DashboardCollecteur"
 import DashboardAdmin from "./pages/DashboardAdmin"
 import DemandeRetrait from "./pages/DemandeRetrait"
+import BackOffice from "./pages/BackOffice"
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/membre/retrait" element={<DemandeRetrait />} />
         <Route path="/collecteur" element={<DashboardCollecteur />} />
         <Route path="/admin" element={<DashboardAdmin />} />
+        <Route path="/backoffice" element={<BackOffice />} />
       </Routes>
     </BrowserRouter>
   )
