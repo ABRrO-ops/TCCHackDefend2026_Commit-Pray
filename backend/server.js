@@ -7,6 +7,7 @@ const authRoutes = require('./routes/auth');
 const cotisationsRoutes = require('./routes/cotisations');
 const adminRoutes = require('./routes/admin');
 const membresRoutes = require('./routes/membres');
+const inscriptionRoutes = require('./routes/inscription');
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/membres', membresRoutes);
 app.use('/api/cotisations', cotisationsRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/inscription', inscriptionRoutes);
 
 // ✅ Test route
 app.get('/', (req, res) => {
